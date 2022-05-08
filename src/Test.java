@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Test {
     public static void main(String[] args) {
 
@@ -22,5 +25,67 @@ public class Test {
         Print how many students are MathStudent with message -> "Math students = {numberOfMathStudents}"
         Print how many students are ScienceStudent with message -> "Science students = {numberOfScienceStudents}"
          */
+
+        Scanner userInput = new Scanner(System.in);
+        ArrayList<Student> studentArrayList = new ArrayList<>();
+
+        do{
+            System.out.println(UserQuestions.askToJoin);
+            String join = userInput.nextLine();
+
+            if(join.toLowerCase().startsWith("y")){
+                System.out.println(UserQuestions.askFirstName);
+                String firstName = userInput.nextLine();
+
+                System.out.println(UserQuestions.askLastName);
+                String lastName = userInput.nextLine();
+
+                System.out.println(UserQuestions.askAge);
+                int age = userInput.nextInt();
+                userInput.nextLine();
+
+                try{
+                    Permission.checkAge(age);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    continue;
+                }
+
+                System.out.println(UserQuestions.askGender);
+                String gender = userInput.nextLine();
+
+                System.out.println(UserQuestions.askClassName);
+                String className = userInput.nextLine();
+
+                try{
+                    Permission.checkClassName(className);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    continue;
+                }
+
+                if(className.toLowerCase().equals("math")){
+                    MathStudent mathStudent = new MathStudent(firstName, lastName, age, gender, className);
+                    studentArrayList.add(mathStudent);
+                    System.out.println("Congratulations! You are registered for Math class.");
+                }
+                else if(className.toLowerCase().equals("science")){
+                    ScienceStudent scienceStudent = new ScienceStudent(firstName, lastName, age, gender, className);
+                    studentArrayList.add(scienceStudent);
+                    System.out.println("Congratulations! You are registered for Science class.");
+                }
+            }
+        }while (studentArrayList.size() < 3);
+
+        System.out.println("\n----- Students List -----\n");
+        for (Student student : studentArrayList) {
+            System.out.println(student);
+
+        }
+        int mathCount = (int) studentArrayList.stream().filter(student -> student.getClassName().toLowerCase().equals("math")).count();
+        System.out.println("Math students = " + mathCount);
+        System.out.println("Science students = " + (studentArrayList.size() - mathCount));
+
+        System.out.println("End of the program!");
     }
 }
